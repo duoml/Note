@@ -1,0 +1,41 @@
+{
+  "settings": {
+    "migrated": true,
+    "iconPacksPath": "plugins/obsidian-icon-folder/icons",
+    "fontSize": 16,
+    "iconColor": null,
+    "recentlyUsedIcons": [
+      "RiFolderLine",
+      "RiCheckLine",
+      "RiAppsLine",
+      "RiPencilLine",
+      "RiLinksLine"
+    ],
+    "recentlyUsedIconsSize": 5,
+    "extraPadding": {
+      "top": 2,
+      "right": 2,
+      "bottom": 2,
+      "left": 2
+    }
+  },
+  "Home.md": "RiHomeLine",
+  "Templates": {
+    "iconName": "RiText",
+    "inheritanceIcon": "RiFileList2Line"
+  },
+  "Resources": "RiLinksLine",
+  "Daily Notes": "RiCheckLine",
+  "Collections": {
+    "iconName": "RiAppsLine",
+    "inheritanceIcon": "RiFileList2Line"
+  },
+  "Notes": {
+    "iconName": "RiPencilLine",
+    "inheritanceIcon": "RiFileList2Line"
+  },
+  "Notes/操作系统": "RiFolderLine",
+  "Notes/网络编程": "RiFolderLine",
+  "Notes/C++": "RiFolderLine",
+  "Notes/Shell": "RiFolderLine"
+}

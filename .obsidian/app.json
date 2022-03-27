@@ -1,0 +1,13 @@
+{
+  "alwaysUpdateLinks": true,
+  "vimMode": true,
+  "showLineNumber": true,
+  "foldIndent": true,
+  "foldHeading": true,
+  "showFrontmatter": false,
+  "defaultViewMode": "preview",
+  "promptDelete": false,
+  "legacyEditor": false,
+  "newFileLocation": "current",
+  "attachmentFolderPath": "Resources"
+}
