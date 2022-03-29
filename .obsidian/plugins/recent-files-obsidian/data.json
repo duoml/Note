@@ -3,6 +3,46 @@
     {
       "basename": "Home",
       "path": "Home.md"
+    },
+    {
+      "basename": "Yearly",
+      "path": "Templates/Yearly.md"
+    },
+    {
+      "basename": "Weekly",
+      "path": "Templates/Weekly.md"
+    },
+    {
+      "basename": "Monthly",
+      "path": "Templates/Monthly.md"
+    },
+    {
+      "basename": "Daily",
+      "path": "Templates/Daily.md"
+    },
+    {
+      "basename": "任务看板",
+      "path": "Collections/任务看板.md"
+    },
+    {
+      "basename": "常用工具",
+      "path": "Collections/常用工具.md"
+    },
+    {
+      "basename": "Common",
+      "path": "Templates/Common.md"
+    },
+    {
+      "basename": "定时器",
+      "path": "Notes/操作系统/定时器.md"
+    },
+    {
+      "basename": "2022",
+      "path": "Periodic Notes/yearly/2022.md"
+    },
+    {
+      "basename": "2022-03-26",
+      "path": "Periodic Notes/daily/2022-03-26.md"
     }
   ],
   "omittedPaths": [],

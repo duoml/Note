@@ -5,11 +5,11 @@
     "fontSize": 16,
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiFileListLine",
       "RiFolderLine",
-      "RiCheckLine",
-      "RiAppsLine",
-      "RiPencilLine",
-      "RiLinksLine"
+      "RiCodeSSlashLine",
+      "RiListCheck",
+      "RiCheckDoubleLine"
     ],
     "recentlyUsedIconsSize": 5,
     "extraPadding": {
@@ -21,11 +21,10 @@
   },
   "Home.md": "RiHomeLine",
   "Templates": {
-    "iconName": "RiText",
-    "inheritanceIcon": "RiFileList2Line"
+    "iconName": "RiCodeSSlashLine",
+    "inheritanceIcon": "RiFileListLine"
   },
   "Resources": "RiLinksLine",
-  "Daily Notes": "RiCheckLine",
   "Collections": {
     "iconName": "RiAppsLine",
     "inheritanceIcon": "RiFileList2Line"
@@ -37,5 +36,10 @@
   "Notes/操作系统": "RiFolderLine",
   "Notes/网络编程": "RiFolderLine",
   "Notes/C++": "RiFolderLine",
-  "Notes/Shell": "RiFolderLine"
+  "Notes/Shell": "RiFolderLine",
+  "Periodic Notes/Daily": "RiFolderLine",
+  "Periodic Notes": "RiCalendarCheckFill",
+  "Periodic Notes/Monthly": "RiFolderLine",
+  "Periodic Notes/Weekly": "RiFolderLine",
+  "Periodic Notes/Yearly": "RiFolderLine"
 }

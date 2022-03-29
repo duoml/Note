@@ -4,7 +4,7 @@
     "type": "split",
     "children": [
       {
-        "id": "06dc6b9ef9fa7dea",
+        "id": "c36981be9a7baadd",
         "type": "leaf",
         "state": {
           "type": "markdown",
@@ -48,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:#weekly_note",
                 "matchingCase": true,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -101,17 +101,6 @@
             }
           },
           {
-            "id": "c945528cad7eb53a",
-            "type": "leaf",
-            "state": {
-              "type": "tag",
-              "state": {
-                "sortOrder": "frequency",
-                "useHierarchy": false
-              }
-            }
-          },
-          {
             "id": "f0d29d81f6a28ee5",
             "type": "leaf",
             "state": {
@@ -130,7 +119,7 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 3
       },
       {
         "id": "eb4b08891e8e2b62",
@@ -143,20 +132,36 @@
               "type": "recent-files",
               "state": {}
             }
+          },
+          {
+            "id": "c945528cad7eb53a",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": false
+              }
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
     "width": 300
   },
-  "active": "06dc6b9ef9fa7dea",
+  "active": "c36981be9a7baadd",
   "lastOpenFiles": [
     "Home.md",
-    "未命名.md",
-    "Resources/hello.md",
-    "Resources/1231.md",
-    "test.md",
-    "未命名 1.md"
+    "Periodic Notes/Daily/未命名.md",
+    "Periodic Notes/Monthly/2022-02.md",
+    "Periodic Notes/Monthly/2022-03.md",
+    "Periodic Notes/Daily/2022-03-30.md",
+    "Templates/Yearly.md",
+    "Templates/Weekly.md",
+    "Templates/Monthly.md",
+    "Templates/Daily.md",
+    "Collections/任务看板.md"
   ]
 }

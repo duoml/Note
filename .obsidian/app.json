@@ -8,6 +8,8 @@
   "defaultViewMode": "preview",
   "promptDelete": false,
   "legacyEditor": false,
-  "newFileLocation": "current",
-  "attachmentFolderPath": "Resources"
+  "newFileLocation": "folder",
+  "attachmentFolderPath": "Resources",
+  "livePreview": false,
+  "newFileFolderPath": "Notes"
 }

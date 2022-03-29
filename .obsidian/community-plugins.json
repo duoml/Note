@@ -1,7 +1,6 @@
 [
   "obsidian-banners",
   "obsidian-style-settings",
-  "table-editor-obsidian",
   "obsidian-core-search-assistant-plugin",
   "customizable-sidebar",
   "homepage",
@@ -35,5 +34,6 @@
   "obsidian-tasks-plugin",
   "obsidian-collapse-all-plugin",
   "markdown-table-editor",
-  "obsidian-icon-folder"
+  "obsidian-icon-folder",
+  "periodic-notes"
 ]

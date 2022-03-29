@@ -1,9 +1,0 @@
-/* ================================== */
-/* ======= custom cssclass ======= */
-/* ========fullwidth  noyaml noscroll================ */
-/*主页预览宽度*/
-.markdown-preview-view.fullwidth.is-readable-line-width .markdown-preview-sizer, .markdown-source-view.is-readable-line-width.fullwidth .CodeMirror, .is-readable-line-width.fullwidth .markdown-preview-section, .is-readable-line-width.fullwidth .markdown-preview-section > div, .markdown-preview-view.is-readable-line-width.fullwidth .markdown-preview-section {
-  width:90% !important;
-  max-width: 90%;
-  /* margin: 0 auto; */
-}

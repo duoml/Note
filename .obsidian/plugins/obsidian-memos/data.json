@@ -1,8 +1,8 @@
 {
   "StartDate": "Sunday",
-  "InsertAfter": "# Journal",
+  "InsertAfter": "## Daily Log",
   "UserName": "MEMO 😉",
-  "ProcessEntriesBelow": "# Journal",
+  "ProcessEntriesBelow": "## Daily Log",
   "Language": "en",
   "SaveMemoButtonLabel": "NOTEIT",
   "ShareFooterStart": "{MemosNum} Memos {UsedDay} Day",

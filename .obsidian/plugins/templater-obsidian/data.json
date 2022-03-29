@@ -15,8 +15,28 @@
   "enable_folder_templates": true,
   "folder_templates": [
     {
-      "folder": "",
-      "template": ""
+      "folder": "Periodic Notes/Daily",
+      "template": "Templates/Daily.md"
+    },
+    {
+      "folder": "Periodic Notes/Weekly",
+      "template": "Templates/Weekly.md"
+    },
+    {
+      "folder": "Periodic Notes/Monthly",
+      "template": "Templates/Monthly.md"
+    },
+    {
+      "folder": "Periodic Notes/Yearly",
+      "template": "Templates/Yearly.md"
+    },
+    {
+      "folder": "Periodic Notes/Quarterly",
+      "template": "Templates/Quarterly.md"
+    },
+    {
+      "folder": "Notes",
+      "template": "Templates/Common.md"
     }
   ],
   "syntax_highlighting": true,

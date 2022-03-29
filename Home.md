@@ -11,7 +11,7 @@ collapse: none
 icon: list
 ```tasks
 not done
-path includes Daily Notes
+path includes Periodic Notes
 sort by urgency
 ``` 
 ````
@@ -21,8 +21,12 @@ sort by urgency
 ````ad-flex
 <div>
 
-### 快速导航
+```dataview
+table  WITHOUT ID file.link as FILE
+from #moc
+```
 </div>
+
 ````
 
 
@@ -32,22 +36,21 @@ sort by urgency
 ### 最近编辑
 ```dataview
 table WITHOUT ID file.link AS "标题",file.mtime as "时间"
-from !"模板" and !"kanban"
+from !"Templates" and !"Periodic Notes" and -#moc
 sort file.mtime desc
-limit 5
+limit 10
 ```
 </div>
 
 <div>
 
-### 三天内创建的笔记
+### 七天内创建的笔记
 ```dataview
 table file.ctime as 创建时间
-from ""
-where date(today) - file.ctime <=dur(3 days)
+from !"Templates" and !"Periodic Notes" and -#moc
+where date(today) - file.ctime <=dur(7 days)
 sort file.ctime desc
-limit 5
+limit 10
 ```
 </div>
 ````
-
