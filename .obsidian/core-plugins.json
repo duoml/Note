@@ -4,6 +4,7 @@
   "switcher",
   "graph",
   "backlink",
+  "canvas",
   "outgoing-link",
   "tag-pane",
   "page-preview",
@@ -16,6 +17,5 @@
   "outline",
   "word-count",
   "slides",
-  "open-with-default-app",
   "file-recovery"
 ]

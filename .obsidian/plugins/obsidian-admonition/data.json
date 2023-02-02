@@ -75,15 +75,11 @@
   },
   "syntaxHighlight": true,
   "copyButton": false,
-  "version": "7.0.4",
+  "version": "9.2.0",
   "autoCollapse": false,
   "defaultCollapseType": "open",
-  "syncLinks": false,
   "injectColor": true,
   "parseTitles": true,
-  "allowMSSyntax": true,
-  "msSyntaxIndented": true,
-  "livePreviewMS": true,
   "dropShadow": true,
   "hideEmpty": false,
   "open": {
@@ -94,5 +90,12 @@
   },
   "icons": [],
   "useFontAwesome": true,
-  "rpgDownloadedOnce": false
+  "rpgDownloadedOnce": false,
+  "msDocConverted": false,
+  "useSnippet": false,
+  "snippetPath": "custom-admonitions.68d09a",
+  "syncLinks": false,
+  "allowMSSyntax": true,
+  "msSyntaxIndented": true,
+  "livePreviewMS": true
 }

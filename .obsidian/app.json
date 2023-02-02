@@ -1,6 +1,6 @@
 {
   "alwaysUpdateLinks": true,
-  "vimMode": true,
+  "vimMode": false,
   "showLineNumber": true,
   "foldIndent": true,
   "foldHeading": true,
@@ -11,5 +11,12 @@
   "newFileLocation": "folder",
   "attachmentFolderPath": "Resources",
   "livePreview": false,
-  "newFileFolderPath": "Notes"
+  "newFileFolderPath": "Notes",
+  "strictLineBreaks": true,
+  "autoPairMarkdown": false,
+  "showUnsupportedFiles": true,
+  "userIgnoreFilters": [
+    "Templates/",
+    "Resources/"
+  ]
 }

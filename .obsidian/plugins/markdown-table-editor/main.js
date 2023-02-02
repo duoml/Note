@@ -21034,9 +21034,9 @@ var require_fast_deep_equal = __commonJS({
   }
 });
 
-// node_modules/react-is/cjs/react-is.development.js
+// node_modules/prop-types/node_modules/react-is/cjs/react-is.development.js
 var require_react_is_development = __commonJS({
-  "node_modules/react-is/cjs/react-is.development.js"(exports) {
+  "node_modules/prop-types/node_modules/react-is/cjs/react-is.development.js"(exports) {
     "use strict";
     if (true) {
       (function() {
@@ -21188,9 +21188,9 @@ var require_react_is_development = __commonJS({
   }
 });
 
-// node_modules/react-is/index.js
+// node_modules/prop-types/node_modules/react-is/index.js
 var require_react_is = __commonJS({
-  "node_modules/react-is/index.js"(exports, module2) {
+  "node_modules/prop-types/node_modules/react-is/index.js"(exports, module2) {
     "use strict";
     if (false) {
       module2.exports = null;
@@ -21898,7 +21898,7 @@ var require_react_contenteditable = __commonJS({
 __export(exports, {
   default: () => MarkdownTableEditorPlugin
 });
-var import_obsidian5 = __toModule(require("obsidian"));
+var import_obsidian7 = __toModule(require("obsidian"));
 
 // src/view.tsx
 var import_obsidian3 = __toModule(require("obsidian"));
@@ -21911,11 +21911,15 @@ var React2 = __toModule(require_react());
 // src/context/context.ts
 var React = __toModule(require_react());
 var AppContext = React.createContext(void 0);
+var PluginContext = React.createContext(void 0);
 var ParentLeafContext = React.createContext(void 0);
 
 // src/context/hooks.ts
 var useApp = () => {
   return React2.useContext(AppContext);
+};
+var usePlugin = () => {
+  return React2.useContext(PluginContext);
 };
 
 // src/views/TableEditor.tsx
@@ -21924,40 +21928,101 @@ var React4 = __toModule(require_react());
 
 // src/utils/markdown.ts
 var Papa = __toModule(require_papaparse_min());
+function sanitizeWikiLinks(input) {
+  const matches = (input || "").matchAll(/\[\[\w*\|\w*\]\]/g);
+  let match = matches.next();
+  while (!match.done) {
+    const value = match.value["0"];
+    input = input.replace(value, value.replace("|", "\\|"));
+    match = matches.next();
+  }
+  return input;
+}
+function extractAfterContent(input) {
+  if (input && input[0] && input[0].length > 1) {
+    let idx = -1;
+    for (idx = 0; idx < input.length; idx++) {
+      if (input[idx].length == 1) {
+        break;
+      }
+    }
+    return input.splice(idx);
+  }
+  return [];
+}
+function extractBeforeContent(input) {
+  if (input && input[0]) {
+    let idx = -1;
+    for (idx = 0; idx < input.length; idx++) {
+      if (input[idx].length > 1) {
+        break;
+      }
+    }
+    return input.splice(0, idx);
+  }
+  return [];
+}
+function removeAlignmentRow(input) {
+  if (input.length > 1) {
+    input.splice(1, 1);
+  }
+}
+function mergeWikiLinkCells(input) {
+  return input.map((row) => {
+    let writeIndex = 0;
+    const result = [];
+    for (let index = 0; index < row.length; index++) {
+      if (index === row.length - 1) {
+        result.push(row[index]);
+        continue;
+      }
+      if (row[index].includes("[[") && row[index].endsWith("\\") && row[index + 1].includes("]]")) {
+        let current = row[index];
+        let offset = 1;
+        while (current.includes("[[") && current.endsWith("\\") && row[index + offset].includes("]]")) {
+          current = `${current}|${row[index + offset]}`;
+          offset++;
+        }
+        result[writeIndex] = current;
+        writeIndex++;
+        index = index + offset;
+      } else {
+        result[writeIndex] = row[index];
+        writeIndex++;
+      }
+    }
+    return result;
+  });
+}
+var papaConfig = {
+  escapeChar: "\\"
+};
 function parseInputData(input) {
   var _a;
-  let { data, meta } = Papa.parse((input || "").trim());
-  if (data && ((_a = data[0]) == null ? void 0 : _a.length) && data[0].length > 1) {
+  input = sanitizeWikiLinks(input);
+  let { data, meta } = Papa.parse((input || "").trim(), papaConfig);
+  let afterContent = void 0;
+  let beforeContent = void 0;
+  let leftContent = [];
+  if (data && ((_a = data[0]) == null ? void 0 : _a.length)) {
+    beforeContent = extractBeforeContent(data);
+    afterContent = extractAfterContent(data);
     if (meta.delimiter === "|") {
-      if (data.length > 1) {
-        data.splice(1, 1);
-      }
       data = data.map((row) => {
         row.splice(row.length - 1, 1);
-        row.splice(0, 1);
+        const dataOnLeft = row.splice(0, 1);
+        leftContent.push(dataOnLeft.join(""));
         return row;
       });
-      data = data.map((row) => {
-        let writeIndex = 0;
-        const result = [];
-        for (let index = 0; index < row.length; index++) {
-          if (index === row.length - 1) {
-            result.push(row[index]);
-            continue;
-          }
-          if (row[index].includes("[[") && row[index].endsWith("\\") && row[index + 1].includes("]]")) {
-            result[writeIndex] = `${row[index]}|${row[index + 1]}`;
-            writeIndex++;
-            index++;
-          } else {
-            result[writeIndex] = row[index];
-            writeIndex++;
-          }
-        }
-        return result;
-      });
+      removeAlignmentRow(data);
+      data = mergeWikiLinkCells(data);
     }
-    return data;
+    return {
+      content: data,
+      afterContent,
+      beforeContent,
+      isInsideCallout: leftContent.length > 0 && leftContent.map((v) => v.trim()).every((v) => v.startsWith(">"))
+    };
   }
   return void 0;
 }
@@ -21972,19 +22037,22 @@ function sanitize(data) {
     }
   });
 }
-var toMarkdown = (values, colJustify) => {
+var toMarkdown = (values, colJustify, isInsideCallout) => {
   var _a;
   const cols = (_a = values[0]) == null ? void 0 : _a.length;
+  if (!cols) {
+    return "";
+  }
   let maxColWidth = Array(cols).fill(0);
   for (let rowIdx = 0; rowIdx < values.length; rowIdx++) {
     for (let colIdx = 0; colIdx < values[0].length; colIdx++) {
       maxColWidth[colIdx] = values[rowIdx][colIdx].length > maxColWidth[colIdx] ? values[rowIdx][colIdx].length : maxColWidth[colIdx];
     }
   }
-  const lineformatter = (row) => `| ${row.map((h, idx) => {
-    const length = maxColWidth[idx] - ((h == null ? void 0 : h.length) || 0);
+  const lineformatter = (row) => `| ${row == null ? void 0 : row.map((value, idx) => {
+    const length = maxColWidth[idx] - ((value == null ? void 0 : value.length) || 0);
     const suffix = Array(length >= 0 ? length : 1).fill(" ").join("");
-    return Number.isFinite(parseFloat(h)) ? `${suffix}${h}` : `${h}${suffix}`;
+    return Number.isFinite(parseFloat(value)) ? `${suffix}${value}` : `${value}${suffix}`;
   }).join(" | ")} |`;
   const header = lineformatter(values[0]);
   let alignMarker = lineformatter(Array(cols).fill("-")).replaceAll(" ", "-");
@@ -22002,9 +22070,13 @@ var toMarkdown = (values, colJustify) => {
   }).join("|");
   alignMarker = `|${alignMarker}`;
   const rows = values.slice(1).map((row) => lineformatter(row)).join("\n");
-  return `${header}
+  let markdown = `${header}
 ${alignMarker}
 ${rows}`;
+  if (isInsideCallout) {
+    markdown = markdown.split("\n").map((row) => `> ${row}`).join("\n");
+  }
+  return markdown;
 };
 
 // src/views/Cell.tsx
@@ -22018,7 +22090,7 @@ var Cell = ({ row, col, content, onContentChanged, values, setValues, colJustify
     onContentChanged(row, col, evt.target.value);
   };
   const handleKeyDown = (evt) => {
-    if (evt.altKey && evt.code === "KeyO") {
+    if (evt.altKey && evt.ctrlKey && evt.code === "KeyO") {
       showContextMenu({
         x: contextMenu.current.getBoundingClientRect().left,
         y: contextMenu.current.getBoundingClientRect().top
@@ -22177,6 +22249,19 @@ var Cell = ({ row, col, content, onContentChanged, values, setValues, colJustify
       newValues.forEach((_, rowIdx) => [newValues[rowIdx][col - 1], newValues[rowIdx][col]] = [newValues[rowIdx][col], newValues[rowIdx][col - 1]]);
       validateAndSetValues(newValues);
     }));
+    menu.addSeparator();
+    menu.addItem((item) => item.setTitle("Cut").setIcon("scissors").onClick(() => {
+      var _a;
+      (_a = navigator == null ? void 0 : navigator.clipboard) == null ? void 0 : _a.writeText(content);
+      onContentChanged(row, col, "");
+    }));
+    menu.addItem((item) => item.setTitle("Copy").setIcon("copy").onClick(() => {
+      var _a;
+      (_a = navigator == null ? void 0 : navigator.clipboard) == null ? void 0 : _a.writeText(content);
+    }));
+    menu.addItem((item) => item.setTitle("Paste").setIcon("paste").onClick(() => {
+      navigator.clipboard.readText().then((content2) => onContentChanged(row, col, content2));
+    }));
     if ((event == null ? void 0 : event.constructor.name) === "SyntheticBaseEvent") {
       menu.showAtMouseEvent(event);
     } else {
@@ -22221,12 +22306,20 @@ var TableEditor = ({ leafId, cursor, inputData, updateViewData, supressNotices =
   let _leafid = leafId;
   let _cursor = cursor;
   const app = useApp();
+  const plugin = usePlugin();
   const [newRows, setNewRows] = React4.useState(3);
   const [newCols, setNewCols] = React4.useState(3);
   const [values, setValues] = React4.useState([[""], [""]]);
+  const [afterValue, setAfterValue] = React4.useState("");
+  const [beforeValue, setBeforeValue] = React4.useState("");
+  const [isInsideCallout, setIsInsideCallout] = React4.useState(false);
   const [colJustify, setColJustify] = React4.useState([]);
   const [copyText, setCopyText] = React4.useState("Copy as Markdown");
   const [autoFocusCell, setAutoFocusCell] = React4.useState({ row: -1, col: -1 });
+  React4.useEffect(() => {
+    setNewRows(plugin.settings.defaultRows);
+    setNewCols(plugin.settings.defaultColumns);
+  }, []);
   const onContentChanged = (rowIndex, colIndex, value) => {
     const newValues = [...values];
     newValues[rowIndex][colIndex] = value;
@@ -22240,36 +22333,45 @@ var TableEditor = ({ leafId, cursor, inputData, updateViewData, supressNotices =
     }
   }, [inputData]);
   React4.useEffect(() => {
-    let data = parseInputData(inputData);
-    if (!data) {
+    let result = parseInputData(inputData);
+    if (!result) {
+      result = {
+        content: void 0,
+        afterContent: [],
+        beforeContent: [],
+        isInsideCallout: false
+      };
+    }
+    let { content, afterContent, beforeContent, isInsideCallout: isInsideCallout2 } = result;
+    if (!content) {
       if (!supressNotices) {
         new import_obsidian2.Notice("Selection is not a valid Markdown table or CSV or Excel data. Creating a new table!");
       }
-      data = [[""], [""]];
+      content = getNewTable();
     }
-    data = sanitize(data);
-    setValues(data);
-    setColJustify(Array(data[0].length).fill("LEFT"));
-    computeAutoFocusRow(data);
+    content = sanitize(content);
+    const processedAfterContent = afterContent.map((row) => row.join("")).join("  \n");
+    const processedBeforeContent = beforeContent.map((row) => row.join("")).join("  \n");
+    setValues(content);
+    setColJustify(Array(content[0].length).fill("LEFT"));
+    setAfterValue(processedAfterContent);
+    setBeforeValue(processedBeforeContent);
+    setIsInsideCallout(isInsideCallout2);
+    computeAutoFocusRow(content);
   }, [inputData]);
   React4.useEffect(() => {
     if (copyText !== "Copy as Markdown") {
       setCopyText("Copy as Markdown");
     }
-    updateViewData(toMarkdown(values, colJustify));
+    updateViewData(getOutput());
   }, [values, colJustify]);
-  const copyClicked = () => {
-    var _a2;
-    setCopyText("Copied!");
-    (_a2 = navigator == null ? void 0 : navigator.clipboard) == null ? void 0 : _a2.writeText(toMarkdown(values, colJustify));
-  };
   const newTableClicked = () => {
     const newValues = Array(newRows).fill([]).map((_) => Array(newCols).fill(""));
     setValues(newValues);
     setColJustify(Array(newValues[0].length).fill("LEFT"));
   };
   const clearClicked = () => {
-    setValues([[""], [""]]);
+    setValues(getNewTable());
     setColJustify(Array(1).fill("LEFT"));
   };
   const shouldAutoFocus = (rowIndex, colIndex) => {
@@ -22277,6 +22379,17 @@ var TableEditor = ({ leafId, cursor, inputData, updateViewData, supressNotices =
       return true;
     }
     return false;
+  };
+  const getOutput = () => {
+    const tableContent = toMarkdown(values, colJustify, isInsideCallout);
+    return `${beforeValue && `${beforeValue}  
+`}${tableContent}  ${afterValue && `   
+${afterValue}`}`;
+  };
+  const copyClicked = () => {
+    var _a2;
+    setCopyText("Copied!");
+    (_a2 = navigator == null ? void 0 : navigator.clipboard) == null ? void 0 : _a2.writeText(getOutput());
   };
   const replaceClicked = () => {
     const editorLeaf = app.workspace.activeLeaf;
@@ -22302,18 +22415,23 @@ var TableEditor = ({ leafId, cursor, inputData, updateViewData, supressNotices =
     }
     const startCursor = { line: lineAbove, ch: 0 };
     const endCursor = { line: lineBelow, ch: view.editor.getLine(lineBelow).length };
-    view.editor.replaceRange(toMarkdown(values, colJustify), startCursor, endCursor);
+    view.editor.replaceRange(getOutput(), startCursor, endCursor);
+  };
+  const getNewTable = () => {
+    let table = Array(newRows).fill([]);
+    table = table.map((row) => Array(newCols).fill(""));
+    return table;
   };
   return /* @__PURE__ */ React4.createElement(React4.Fragment, null, /* @__PURE__ */ React4.createElement("div", {
     className: "mte button-container"
   }, "Rows : ", /* @__PURE__ */ React4.createElement("input", {
     type: "text",
-    onChange: (e) => setNewRows(parseInt(e.target.value)),
-    placeholder: "3"
+    onChange: (e) => setNewRows(parseInt(e.target.value) || 0),
+    value: newRows
   }), "Columns : ", /* @__PURE__ */ React4.createElement("input", {
     type: "text",
-    onChange: (e) => setNewCols(parseInt(e.target.value)),
-    placeholder: "3"
+    onChange: (e) => setNewCols(parseInt(e.target.value) || 0),
+    value: newCols
   }), /* @__PURE__ */ React4.createElement("button", {
     onClick: newTableClicked
   }, "New Table"), /* @__PURE__ */ React4.createElement("button", {
@@ -22351,8 +22469,9 @@ var TableEditor = ({ leafId, cursor, inputData, updateViewData, supressNotices =
 // src/view.tsx
 var MARKDOWN_TABLE_EDITOR_VIEW = "markdown-table-editor-view";
 var TableView = class extends import_obsidian3.ItemView {
-  constructor(leaf) {
+  constructor(plugin, leaf) {
     super(leaf);
+    this.plugin = plugin;
   }
   getViewType() {
     return MARKDOWN_TABLE_EDITOR_VIEW;
@@ -22366,13 +22485,15 @@ var TableView = class extends import_obsidian3.ItemView {
         this.state = state;
         ReactDOM.render(/* @__PURE__ */ React5.createElement(AppContext.Provider, {
           value: this.app
+        }, /* @__PURE__ */ React5.createElement(PluginContext.Provider, {
+          value: this.plugin
         }, /* @__PURE__ */ React5.createElement(TableEditor, {
           leafId: state.leafId,
           cursor: state.cursor,
           inputData: state.data,
           updateViewData: (data) => this.state.data = data,
           supressNotices: false
-        })), this.containerEl.children[1]);
+        }))), this.containerEl.children[1]);
       }
       return;
     });
@@ -22386,13 +22507,15 @@ var TableView = class extends import_obsidian3.ItemView {
     return __async(this, null, function* () {
       ReactDOM.render(/* @__PURE__ */ React5.createElement(AppContext.Provider, {
         value: this.app
+      }, /* @__PURE__ */ React5.createElement(PluginContext.Provider, {
+        value: this.plugin
       }, /* @__PURE__ */ React5.createElement(TableEditor, {
         leafId: "",
         cursor: "",
         inputData: "",
         updateViewData: (data) => this.state.data = data,
         supressNotices: true
-      })), this.containerEl.children[1]);
+      }))), this.containerEl.children[1]);
     });
   }
   onClose() {
@@ -22405,7 +22528,7 @@ var TableView = class extends import_obsidian3.ItemView {
   }
 };
 
-// src/utils/icons.ts
+// src/utils/obsidian/icons.ts
 var import_obsidian4 = __toModule(require("obsidian"));
 var icons = {
   spreadsheet: `
@@ -22558,131 +22681,227 @@ var addIcons = () => {
   });
 };
 
-// src/main.ts
+// src/utils/obsidian/ribbon.ts
+var import_obsidian6 = __toModule(require("obsidian"));
+
+// src/constants.ts
 var VERTICAL_EDITOR_TEXT = "Open Editor (Next to the Active View)";
 var HORIZONTAL_EDITOR_TEXT = "Open Editor (Below the Active View)";
 var POPOVER_EDITOR_TEXT = "Open Editor (with the hover editor pluging)";
-var MarkdownTableEditorPlugin = class extends import_obsidian5.Plugin {
+
+// src/utils/obsidian/view.ts
+var import_obsidian5 = __toModule(require("obsidian"));
+var registerViews = (plugin) => {
+  plugin.registerView(MARKDOWN_TABLE_EDITOR_VIEW, (leaf) => new TableView(plugin, leaf));
+};
+var activateMarkdownEditorOnRight = (plugin) => activateView(plugin, "vertical");
+var activateMarkdownEditorBelow = (plugin) => activateView(plugin, "horizontal");
+var activateMarkdownEditorInPopup = (plugin) => activateView(plugin, "popover");
+var activateMarkdownEditorInDefaultDirection = (plugin) => {
+  const defaultDirection = plugin.settings.defaultDirection;
+  activateView(plugin, defaultDirection);
+};
+var selectTableContentFromMarkdownView = (view) => {
+  const { data, startCursor, endCursor } = getDataFromMarkdownView(view);
+  view.editor.setSelection(startCursor, endCursor);
+};
+var activateView = (plugin, direction = "vertical") => __async(void 0, null, function* () {
+  var _a;
+  const app = plugin.app;
+  app.workspace.detachLeavesOfType(MARKDOWN_TABLE_EDITOR_VIEW);
+  const view = app.workspace.getActiveViewOfType(import_obsidian5.MarkdownView);
+  if (!view) {
+    return;
+  }
+  let data = (_a = getDataFromMarkdownView(view)) == null ? void 0 : _a.data;
+  let { line } = view.editor.getCursor();
+  let _cursor = line;
+  const activeLeaf = app.workspace.activeLeaf;
+  let _leafid = activeLeaf.id;
+  let editorLeaf = void 0;
+  if (direction === "popover") {
+    editorLeaf = app.plugins.plugins["obsidian-hover-editor"].spawnPopover();
+  } else {
+    editorLeaf = app.workspace.createLeafBySplit(activeLeaf, direction);
+  }
+  yield editorLeaf.setViewState({
+    type: MARKDOWN_TABLE_EDITOR_VIEW,
+    active: true,
+    state: { data, leafId: _leafid, cursor: _cursor }
+  });
+  app.workspace.revealLeaf(app.workspace.getLeavesOfType(MARKDOWN_TABLE_EDITOR_VIEW)[0]);
+});
+var getDataFromMarkdownView = (view) => {
+  let data = void 0;
+  let startCursor = void 0;
+  let endCursor = void 0;
+  if (view.editor.somethingSelected()) {
+    data = view.editor.getSelection();
+  } else {
+    let { line } = view.editor.getCursor();
+    if (!!view.editor.getLine(line).trim()) {
+      let lineAbove = Math.max(line - 1, 0);
+      if (!!view.editor.getLine(lineAbove).trim()) {
+        while (lineAbove > 0 && !!view.editor.getLine(lineAbove - 1).trim()) {
+          lineAbove--;
+        }
+      } else {
+        lineAbove = line;
+      }
+      let lineBelow = Math.min(line + 1, view.editor.lineCount() - 1);
+      if (!!view.editor.getLine(lineBelow).trim()) {
+        while (lineBelow + 1 < view.editor.lineCount() && !!view.editor.getLine(lineBelow + 1).trim()) {
+          lineBelow++;
+        }
+      } else {
+        lineBelow = line;
+      }
+      startCursor = { line: lineAbove, ch: 0 };
+      endCursor = { line: lineBelow, ch: view.editor.getLine(lineBelow).length };
+      view.editor.setSelection(startCursor, endCursor);
+      data = view.editor.getRange(startCursor, endCursor);
+    }
+  }
+  return { data, startCursor, endCursor };
+};
+
+// src/utils/obsidian/ribbon.ts
+var registerRibbonIcons = (plugin) => {
+  plugin.addRibbonIcon("spreadsheet", "Open Markdown Table Editor", (event) => {
+    if (event.type == "click") {
+      activateMarkdownEditorInDefaultDirection(plugin);
+      event.preventDefault();
+      return;
+    }
+    const menu = new import_obsidian6.Menu(plugin.app);
+    menu.addItem((item) => item.setTitle(VERTICAL_EDITOR_TEXT).setIcon("vertical-split").onClick(() => {
+      activateMarkdownEditorOnRight(plugin);
+    }));
+    menu.addItem((item) => item.setTitle(HORIZONTAL_EDITOR_TEXT).setIcon("horizontal-split").onClick(() => {
+      activateMarkdownEditorBelow(plugin);
+    }));
+    if (plugin.app.plugins.plugins["obsidian-hover-editor"] !== void 0) {
+      menu.addItem((item) => item.setTitle(POPOVER_EDITOR_TEXT).setIcon("popup-open").onClick(() => {
+        activateMarkdownEditorInPopup(plugin);
+      }));
+    }
+    menu.showAtMouseEvent(event);
+  });
+};
+
+// src/utils/obsidian/commands.ts
+var registerCommands = (plugin) => {
+  plugin.addCommand({
+    id: "markdown-table-editor-open-vertical",
+    name: VERTICAL_EDITOR_TEXT,
+    editorCallback: (_, __) => __async(void 0, null, function* () {
+      activateMarkdownEditorOnRight(plugin);
+    })
+  });
+  plugin.addCommand({
+    id: "markdown-table-editor-open-horizontal",
+    name: HORIZONTAL_EDITOR_TEXT,
+    editorCallback: (_, __) => __async(void 0, null, function* () {
+      activateMarkdownEditorBelow(plugin);
+    })
+  });
+  plugin.addCommand({
+    id: "markdown-table-editor-select-table-content",
+    name: "Select surrounding Table Content",
+    editorCallback: (_, view) => __async(void 0, null, function* () {
+      selectTableContentFromMarkdownView(view);
+    })
+  });
+  const isHoverEditorPluginInstalled = plugin.app.plugins.plugins["obsidian-hover-editor"] !== void 0;
+  const shouldenableHoverEditor = isHoverEditorPluginInstalled;
+  if (shouldenableHoverEditor) {
+    plugin.addCommand({
+      id: "markdown-table-editor-open-in-popover",
+      name: POPOVER_EDITOR_TEXT,
+      editorCallback: (_, __) => __async(void 0, null, function* () {
+        activateMarkdownEditorInPopup(plugin);
+      })
+    });
+  }
+};
+
+// src/main.ts
+var DEFAULT_SETTINGS = {
+  defaultDirection: "vertical",
+  defaultRows: 3,
+  defaultColumns: 3
+};
+var MarkdownTableEditorPlugin = class extends import_obsidian7.Plugin {
+  getSettings() {
+    return this.settings;
+  }
   onload() {
     return __async(this, null, function* () {
+      yield this.loadSettings();
       addIcons();
-      this.registerView(MARKDOWN_TABLE_EDITOR_VIEW, (leaf) => new TableView(leaf));
-      this.addRibbonIcon("spreadsheet", "Open Markdown Table Editor", (event) => {
-        if (event.type == "click") {
-          this.activateView("vertical");
-          event.preventDefault();
-          return;
-        }
-        const menu = new import_obsidian5.Menu(this.app);
-        menu.addItem((item) => item.setTitle(VERTICAL_EDITOR_TEXT).setIcon("vertical-split").onClick(() => {
-          this.activateView("vertical");
-        }));
-        menu.addItem((item) => item.setTitle(HORIZONTAL_EDITOR_TEXT).setIcon("horizontal-split").onClick(() => {
-          this.activateView("horizontal");
-        }));
-        menu.showAtMouseEvent(event);
-      });
-      this.addCommand({
-        id: "markdown-table-editor-open-vertical",
-        name: VERTICAL_EDITOR_TEXT,
-        editorCallback: (_, __) => __async(this, null, function* () {
-          this.activateView("vertical");
-        })
-      });
-      this.addCommand({
-        id: "markdown-table-editor-open-horizontal",
-        name: HORIZONTAL_EDITOR_TEXT,
-        editorCallback: (_, __) => __async(this, null, function* () {
-          this.activateView("horizontal");
-        })
-      });
-      this.addCommand({
-        id: "markdown-table-editor-select-table-content",
-        name: "Select surrounding Table Content",
-        editorCallback: (_, view) => __async(this, null, function* () {
-          this.selectTableContent(view);
-        })
-      });
-      if (this.app.plugins.plugins["obsidian-hover-editor"] !== void 0) {
-        this.addCommand({
-          id: "markdown-table-editor-open-in-popover",
-          name: POPOVER_EDITOR_TEXT,
-          editorCallback: (_, __) => __async(this, null, function* () {
-            this.activateView("popover");
-          })
-        });
-      }
+      registerViews(this);
+      registerRibbonIcons(this);
+      registerCommands(this);
+      this.addSettingTab(new MarkdownEditorSettingTab(this));
+    });
+  }
+  loadSettings() {
+    return __async(this, null, function* () {
+      this.settings = Object.assign({}, DEFAULT_SETTINGS, yield this.loadData());
+    });
+  }
+  saveSettings() {
+    return __async(this, null, function* () {
+      yield this.saveData(this.settings);
     });
   }
   onunload() {
     this.app.workspace.detachLeavesOfType(MARKDOWN_TABLE_EDITOR_VIEW);
   }
-  activateView(direction = "vertical") {
-    return __async(this, null, function* () {
-      var _a;
-      this.app.workspace.detachLeavesOfType(MARKDOWN_TABLE_EDITOR_VIEW);
-      const view = this.app.workspace.getActiveViewOfType(import_obsidian5.MarkdownView);
-      if (!view) {
-        return;
-      }
-      let data = (_a = this.getData(view)) == null ? void 0 : _a.data;
-      let { line } = view.editor.getCursor();
-      let _cursor = line;
-      const activeLeaf = this.app.workspace.activeLeaf;
-      let _leafid = activeLeaf.id;
-      let editorLeaf = void 0;
-      if (direction === "popover") {
-        editorLeaf = this.app.plugins.plugins["obsidian-hover-editor"].spawnPopover();
-      } else {
-        editorLeaf = this.app.workspace.createLeafBySplit(activeLeaf, direction);
-      }
-      yield editorLeaf.setViewState({
-        type: MARKDOWN_TABLE_EDITOR_VIEW,
-        active: true,
-        state: { data, leafId: _leafid, cursor: _cursor }
-      });
-      this.app.workspace.revealLeaf(this.app.workspace.getLeavesOfType(MARKDOWN_TABLE_EDITOR_VIEW)[0]);
+};
+var MarkdownEditorSettingTab = class extends import_obsidian7.PluginSettingTab {
+  constructor(plugin) {
+    super(plugin.app, plugin);
+    this.plugin = plugin;
+  }
+  display() {
+    const { containerEl } = this;
+    containerEl.empty();
+    containerEl.createEl("h2", { text: "Settings for Markdown Table Editor" });
+    new import_obsidian7.Setting(containerEl).setName("Default Direction").setDesc("Default direction in which the Markdown Editor has to be opened").addDropdown((dropDown) => {
+      dropDown.addOption("vertical", "Open to the right of active editor");
+      dropDown.addOption("horizontal", "Open below the active editor");
+      dropDown.addOption("popover", "Open in popover");
+      dropDown.setValue(this.plugin.settings.defaultDirection);
+      dropDown.onChange((value) => __async(this, null, function* () {
+        let direction;
+        if (value !== "vertical" && value !== "horizontal" && value !== "popover") {
+          direction = "vertical";
+        } else {
+          direction = value;
+        }
+        this.plugin.settings.defaultDirection = direction;
+        yield this.plugin.saveSettings();
+      }));
     });
-  }
-  getData(view) {
-    let data = void 0;
-    let startCursor = void 0;
-    let endCursor = void 0;
-    if (view.editor.somethingSelected()) {
-      data = view.editor.getSelection();
-    } else {
-      let { line } = view.editor.getCursor();
-      if (!!view.editor.getLine(line).trim()) {
-        let lineAbove = Math.max(line - 1, 0);
-        if (!!view.editor.getLine(lineAbove).trim()) {
-          while (lineAbove > 0 && !!view.editor.getLine(lineAbove - 1).trim()) {
-            lineAbove--;
-          }
-        } else {
-          lineAbove = line;
-        }
-        let lineBelow = Math.min(line + 1, view.editor.lineCount() - 1);
-        if (!!view.editor.getLine(lineBelow).trim()) {
-          while (lineBelow + 1 < view.editor.lineCount() && !!view.editor.getLine(lineBelow + 1).trim()) {
-            lineBelow++;
-          }
-        } else {
-          lineBelow = line;
-        }
-        startCursor = { line: lineAbove, ch: 0 };
-        endCursor = { line: lineBelow, ch: view.editor.getLine(lineBelow).length };
-        view.editor.setSelection(startCursor, endCursor);
-        data = view.editor.getRange(startCursor, endCursor);
+    new import_obsidian7.Setting(containerEl).setName("Number of rows").setDesc("Default number of rows in new tables created").addText((text) => text.setPlaceholder("3").setValue(this.plugin.settings.defaultRows.toString()).onChange((value) => __async(this, null, function* () {
+      let rows = parseInt(value);
+      if (!rows) {
+        rows = 0;
+        new import_obsidian7.Notice("Rows has to be positive number. Defaulting to 3");
       }
-    }
-    return { data, startCursor, endCursor };
-  }
-  selectTableContent(view) {
-    const { data, startCursor, endCursor } = this.getData(view);
-    const parsedData = parseInputData(data);
-    if (parseInputData) {
-      view.editor.setSelection(startCursor, endCursor);
-    }
+      this.plugin.settings.defaultRows = rows || 3;
+      yield this.plugin.saveSettings();
+    })));
+    new import_obsidian7.Setting(containerEl).setName("Number of columns").setDesc("Default number of columns in new tables created").addText((text) => text.setPlaceholder("3").setValue(this.plugin.settings.defaultColumns.toString()).onChange((value) => __async(this, null, function* () {
+      let cols = parseInt(value);
+      if (!cols) {
+        cols = 0;
+        new import_obsidian7.Notice("Columns has to be positive number. Defaulting to 3");
+      }
+      this.plugin.settings.defaultColumns = cols || 3;
+      yield this.plugin.saveSettings();
+    })));
   }
 };
 /*

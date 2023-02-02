@@ -1,8 +1,56 @@
 {
   "recentFiles": [
     {
+      "basename": "2023-02-03",
+      "path": "Periodic Notes/Daily/2023-02-03.md"
+    },
+    {
+      "basename": "TCP 选项",
+      "path": "Notes/网络编程/TCP 选项.md"
+    },
+    {
+      "basename": "CPU",
+      "path": "Notes/操作系统/CPU.md"
+    },
+    {
+      "basename": "信号处理",
+      "path": "Notes/操作系统/信号处理.md"
+    },
+    {
+      "basename": "锁",
+      "path": "Notes/操作系统/锁.md"
+    },
+    {
+      "basename": "进程和线程",
+      "path": "Notes/操作系统/进程和线程.md"
+    },
+    {
+      "basename": "定时器",
+      "path": "Notes/操作系统/定时器.md"
+    },
+    {
       "basename": "Home",
       "path": "Home.md"
+    },
+    {
+      "basename": "容器",
+      "path": "Notes/C++/容器.md"
+    },
+    {
+      "basename": "shell",
+      "path": "Notes/Shell/shell.md"
+    },
+    {
+      "basename": "UNCP",
+      "path": "Notes/网络编程/UNCP.md"
+    },
+    {
+      "basename": "任务看板",
+      "path": "Collections/任务看板.md"
+    },
+    {
+      "basename": "常用工具",
+      "path": "Collections/常用工具.md"
     },
     {
       "basename": "Yearly",
@@ -21,20 +69,8 @@
       "path": "Templates/Daily.md"
     },
     {
-      "basename": "任务看板",
-      "path": "Collections/任务看板.md"
-    },
-    {
-      "basename": "常用工具",
-      "path": "Collections/常用工具.md"
-    },
-    {
       "basename": "Common",
       "path": "Templates/Common.md"
-    },
-    {
-      "basename": "定时器",
-      "path": "Notes/操作系统/定时器.md"
     },
     {
       "basename": "2022",
@@ -46,5 +82,6 @@
     }
   ],
   "omittedPaths": [],
-  "maxLength": null
+  "maxLength": null,
+  "openType": "tab"
 }
