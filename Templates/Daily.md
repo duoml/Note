@@ -9,7 +9,7 @@ let quarterLink = fileDate.format('YYYY-[Q]Q');
 let monthLink = fileDate.format('YYYY-MM');
 let weekLink = fileDate.format('gggg-[W]WW');
 -%>
-tags: daily_note <% fileDate.format("YYYYMMDD") %> <% weekLink %> <% monthLink %> <% quarterLink %> <% yearLink %>
+tags: daily_note <% weekLink %> <% monthLink %> <% quarterLink %> <% yearLink %>
 weekday: <% fileDate.format("ddd") %>
 ---
 <%*

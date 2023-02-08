@@ -14,7 +14,6 @@
   "obsidian-admonition",
   "nldates-obsidian",
   "url-into-selection",
-  "obsidian-pangu",
   "obsidian-better-command-palette",
   "metaedit",
   "obsidian-outliner",
@@ -22,6 +21,7 @@
   "periodic-notes",
   "table-editor-obsidian",
   "obsidian-tasks-plugin",
-  "obsidian-icon-folder",
-  "file-explorer-note-count"
+  "file-explorer-note-count",
+  "obsidian-linter",
+  "cmenu-plugin"
 ]

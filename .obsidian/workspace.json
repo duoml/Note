@@ -4,15 +4,19 @@
     "type": "split",
     "children": [
       {
-        "id": "fc49c3b666afa007",
+        "id": "7e353c1a3cbbd8c8",
         "type": "tabs",
         "children": [
           {
-            "id": "31dfc73af5abcc35",
+            "id": "ddcf5ce00130cd00",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "Notes/C++/智能指针.md",
+                "mode": "preview",
+                "source": true
+              }
             }
           }
         ]
@@ -81,6 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "Notes/C++/智能指针.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -97,6 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "Notes/C++/智能指针.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -107,7 +113,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "Notes/C++/智能指针.md"
+              }
             }
           }
         ],
@@ -156,17 +164,17 @@
       "periodic-notes:Open today": false
     }
   },
-  "active": "9b429f29b9f09a74",
+  "active": "ddcf5ce00130cd00",
   "lastOpenFiles": [
+    "Notes/C++/容器.md",
+    "Notes/obsidian/魔方配色设置说明.md",
+    "Notes/Pasted image 20211227102956.png.md",
+    "Notes/C++/智能指针.md",
+    "Home.md",
+    "Notes/Shell/shell.md",
+    "Templates/Monthly.md",
     "Notes/未命名.canvas",
     "Periodic Notes/Daily/2023-02-03.md",
-    "Notes/网络编程/TCP 选项.md",
-    "Notes/操作系统/CPU.md",
-    "Notes/操作系统/信号处理.md",
-    "Notes/操作系统/锁.md",
-    "Notes/操作系统/进程和线程.md",
-    "Notes/操作系统/定时器.md",
-    "Home.md",
-    "Notes/C++/容器.md"
+    "Notes/网络编程/TCP 选项.md"
   ]
 }

@@ -5,7 +5,11 @@
   "cssTheme": "Blue Topaz",
   "enabledCssSnippets": [
     "【自定义】myhome 样式",
-    "hide_metadata"
+    "hide_metadata",
+    "【图标】checkbox",
+    "【图标】iconfont",
+    "【FONT】Consolas-Bookerly",
+    "pdf"
   ],
-  "accentColor": "#63ace5"
+  "accentColor": "#3eaf7c"
 }

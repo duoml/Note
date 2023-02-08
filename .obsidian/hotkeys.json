@@ -11,9 +11,34 @@
   "obsidian-better-command-palette:open-better-commmand-palette": [
     {
       "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "P"
+    }
+  ],
+  "app:go-back": [
+    {
+      "modifiers": [
+        "Alt"
+      ],
+      "key": "ArrowLeft"
+    }
+  ],
+  "switcher:open": [
+    {
+      "modifiers": [
         "Mod"
       ],
       "key": "P"
+    }
+  ],
+  "app:go-forward": [
+    {
+      "modifiers": [
+        "Alt"
+      ],
+      "key": "ArrowRight"
     }
   ]
 }
