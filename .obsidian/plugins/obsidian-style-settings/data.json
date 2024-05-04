@@ -90,5 +90,7 @@
   "blue-topaz-theme@@font-family-h2": "Bookerly, Merriweather, 'LXGW WenKai', var(--font-default)",
   "blue-topaz-theme@@font-family-h3": "Bookerly, Merriweather, 'LXGW WenKai', var(--font-default)",
   "blue-topaz-theme@@font-family-h4": "Bookerly, Merriweather, 'LXGW WenKai', var(--font-default)",
-  "blue-topaz-theme@@file-bg-shape-option": "file-bg-rounded-rectangle"
+  "blue-topaz-theme@@file-bg-shape-option": "file-bg-rounded-rectangle",
+  "minimal-advanced@@styled-scrollbars": true,
+  "minimal-advanced@@cursor": "pointer"
 }

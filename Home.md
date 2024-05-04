@@ -1,6 +1,5 @@
 ---
 banner: "https://img.xjh.me/random_img.php?type=bg&ctype=nature&return=302"
-cssclass: fullwidth,noyaml,noscroll,myhome
 banner_x: 0.47216
 ---
 

@@ -23,5 +23,6 @@
   "obsidian-tasks-plugin",
   "file-explorer-note-count",
   "obsidian-linter",
-  "cmenu-plugin"
+  "cmenu-plugin",
+  "obsidian-minimal-settings"
 ]
